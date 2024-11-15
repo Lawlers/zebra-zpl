@@ -10,18 +10,19 @@ package fr.w3blog.zpl.constant;
  */
 public enum ZebraPaperType {
 
-	CONTINUOUS("N"), NON_CONTINUOUS_WEB_SENSING("W"), MARK_SENSING("M");
+	CONTINUOUS("N"),
+	NON_CONTINUOUS_WEB_SENSING("W"),
+	MARK_SENSING("M");
 
-	String desiredMode;
-	int	blackMarkOffsetInDots = 0;
+	private final String desiredMode;
+	private final int blackMarkOffsetInDots; // 保留字段，但所有实例中都是0
 
-	private ZebraPaperType(String desiredMode) {
+	ZebraPaperType(String desiredMode) {
 		this.desiredMode = desiredMode;
-		this.blackMarkOffsetInDots = 0;
+		this.blackMarkOffsetInDots = 0; // 所有实例中都是0
 	}
 
-	private ZebraPaperType(String desiredMode, int blackMarkOffsetInDots)
-	{
+	ZebraPaperType(String desiredMode, int blackMarkOffsetInDots) {
 		this.desiredMode = desiredMode;
 		this.blackMarkOffsetInDots = blackMarkOffsetInDots;
 	}
@@ -33,35 +34,38 @@ public enum ZebraPaperType {
 		return desiredMode;
 	}
 
+	/**
+	 * @return the blackMarkOffsetInDots
+	 */
+	public int getBlackMarkOffsetInDots() {
+		return blackMarkOffsetInDots;
+	}
 
 	/**
-	 * Function which return ^MN command
-	 * 
-	 * @return
+	 * Function which returns the ^MN command
+	 *
+	 * @return the ZPL code for the paper type
 	 */
 	public String getZplCode() {
-		if(desiredMode.equalsIgnoreCase("M"))
-			return "^MN" + desiredMode +"," + blackMarkOffsetInDots + "\n";
+		if ("M".equals(desiredMode)) {
+			return "^MN" + desiredMode + "," + blackMarkOffsetInDots + "\n";
+		}
 		return "^MN" + desiredMode + "\n";
 	}
 
-	static public ZebraPaperType getPaperType(String letter)
-	{
-		ZebraPaperType myPaperType = ZebraPaperType.CONTINUOUS;
-		switch(letter){
-			case "CONTINUOUS" :
-				myPaperType = ZebraPaperType.CONTINUOUS;
-				break;
-			case "NON_CONTINUOUS_WEB_SENSING" :
-				myPaperType = ZebraPaperType.NON_CONTINUOUS_WEB_SENSING;
-				break;
-			case "MARK_SENSING" :
-				myPaperType = ZebraPaperType.MARK_SENSING;
-				break;
-			default :
-				myPaperType = ZebraPaperType.CONTINUOUS;
-				break;
+	/**
+	 * Gets the ZebraPaperType enum from a string value.
+	 *
+	 * @param name the string value to match
+	 * @return the corresponding ZebraPaperType
+	 * @throws IllegalArgumentException if the name does not match any enum constant
+	 */
+	public static ZebraPaperType getPaperType(String name) {
+		for (ZebraPaperType type : values()) {
+			if (type.name().equals(name)) {
+				return type;
+			}
 		}
-		return myPaperType;
+		throw new IllegalArgumentException("No matching constant for " + name);
 	}
 }
